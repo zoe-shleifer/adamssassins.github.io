@@ -24,6 +24,16 @@
 
         .playfair { font-family: 'Playfair Display', Georgia, serif; }
 
+        .page-frost-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
         .nyt-card {
             background: transparent;
             border: 1px solid rgba(226, 226, 226, 0.85);
@@ -123,10 +133,29 @@
         ::-webkit-scrollbar-track { background: #f7f7f5; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #999; }
+
+        #rules-panel {
+            background: rgb(127, 29, 29);
+            color: #fff;
+        }
+
+        #rules-panel::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        #rules-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 3px;
+        }
+
+        #rules-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
     </style>
 </head>
 <body>
-    <div class="min-h-screen pb-8" style="background: transparent;">
+    <div class="page-frost-layer" aria-hidden="true"></div>
+    <div class="min-h-screen pb-8 relative z-[1]" style="background: transparent;">
         <header class="border-b border-gray-300 py-4 px-4 text-center bg-transparent">
             <div class="max-w-7xl mx-auto">
                 <div class="title-frost mx-auto pb-3 mb-2">
@@ -185,8 +214,8 @@
 
                         <div id="player-list" class="p-2 grid grid-cols-3 sm:grid-cols-4 gap-1.5 max-h-[550px] overflow-y-auto">
                         </div>
-                        <div id="rules-panel" class="p-4 max-h-[550px] overflow-y-auto" style="display:none">
-                            <div class="text-gray-700 text-[13px] leading-relaxed">
+                        <div id="rules-panel" class="p-4 max-h-[550px] overflow-y-auto rounded-b-sm" style="display:none">
+                            <div class="text-[13px] leading-relaxed">
                                 <ul class="space-y-3">
                                     <li>You have been assigned a target.</li>
                                     <li>You must kill them by blasting them with a water gun. Several hundred waterguns are available in the dining hall.</li>
