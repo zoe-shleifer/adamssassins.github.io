@@ -388,7 +388,7 @@
             document.getElementById('count-dead').innerText = `(${currentPlayers.filter(p => p.status === 'Dead').length})`;
 
             if (currentKillFeed.length === 0) {
-                feedEl.innerHTML = `<div class="p-12 text-center text-amber-600 font-bold uppercase tracking-widest italic">No confirmed kills in logs.</div>`;
+                feedEl.innerHTML = `<div class="p-12 text-center text-amber-600 font-bold uppercase tracking-widest italic">No kills yet ... let the bloodshed begin.</div>`;
             } else {
                 feedEl.innerHTML = currentKillFeed.map(k => `
                     <div class="kill-row p-5 transition-all bg-white/40 border-b border-amber-50">
