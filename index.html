@@ -174,13 +174,16 @@
 
         const getCsvUrl = (id) => `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=0`;
 
-        function formatName(str) {
-            if (!str) return "";
-            return str.trim()
-                .toLowerCase()
-                .split(/\s+/)
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ');
+        /** Trim and collapse spaces; preserve capitalization from the sheet. */
+        function rosterNameFromSheet(str) {
+            if (!str) return '';
+            return String(str).trim().replace(/\s+/g, ' ');
+        }
+
+        /** Case-insensitive key for roster / kills matching only. */
+        function nameKey(str) {
+            const s = rosterNameFromSheet(str);
+            return s ? s.toLowerCase() : '';
         }
 
         function parseCSV(text) {
@@ -267,10 +270,10 @@
             const nameIdx = rosterHeaders['name'] ?? 0;
 
             rosterData.slice(1).forEach(row => {
-                const rawName = row[nameIdx]?.trim();
-                if (rawName && rawName.length > 1) {
-                    const normalized = formatName(rawName);
-                    playerMap.set(normalized, { name: normalized, status: 'Alive', killedBy: null, location: 'Field', kills: 0 });
+                const rawName = rosterNameFromSheet(row[nameIdx] ?? '');
+                if (rawName.length > 1) {
+                    const key = nameKey(rawName);
+                    playerMap.set(key, { name: rawName, status: 'Alive', killedBy: null, location: 'Field', kills: 0 });
                 }
             });
 
@@ -283,29 +286,35 @@
                 const descIdx = killsHeaders['description'];
 
                 killsData.slice(1).forEach(row => {
-                    const killerName = formatName(row[kIdx]?.trim());
-                    const victimName = formatName(row[tIdx]?.trim());
+                    const killerRaw = rosterNameFromSheet(row[kIdx] ?? '');
+                    const victimRaw = rosterNameFromSheet(row[tIdx] ?? '');
+                    const victimKey = nameKey(victimRaw);
+                    const killerKey = nameKey(killerRaw);
 
-                    if (victimName && playerMap.has(victimName)) {
-                        const victimObj = playerMap.get(victimName);
-                        if (victimObj.status === 'Alive') {
-                            victimObj.status = 'Dead';
-                            victimObj.killedBy = killerName || 'Unknown';
-                            victimObj.location = locIdx !== undefined ? row[locIdx]?.trim() : 'Field';
+                    if (!victimKey || !playerMap.has(victimKey)) return;
 
-                            if (killerName && playerMap.has(killerName)) {
-                                playerMap.get(killerName).kills += 1;
-                            }
+                    const victimObj = playerMap.get(victimKey);
+                    if (victimObj.status !== 'Alive') return;
 
-                            killFeed.unshift({
-                                time: timeIdx !== undefined ? row[timeIdx] : '',
-                                killer: killerName || 'Unknown',
-                                victim: victimName,
-                                location: victimObj.location,
-                                desc: descIdx !== undefined ? row[descIdx]?.trim() : ''
-                            });
-                        }
+                    victimObj.status = 'Dead';
+                    victimObj.location = locIdx !== undefined ? row[locIdx]?.trim() : 'Field';
+
+                    const killerRoster = killerKey && playerMap.has(killerKey) ? playerMap.get(killerKey).name : '';
+                    victimObj.killedBy = killerRoster || killerRaw || 'Unknown';
+
+                    if (killerKey && playerMap.has(killerKey)) {
+                        playerMap.get(killerKey).kills += 1;
                     }
+
+                    const killerDisplay = killerRoster || killerRaw || 'Unknown';
+
+                    killFeed.unshift({
+                        time: timeIdx !== undefined ? row[timeIdx] : '',
+                        killer: killerDisplay,
+                        victim: victimObj.name,
+                        location: victimObj.location,
+                        desc: descIdx !== undefined ? row[descIdx]?.trim() : ''
+                    });
                 });
             }
 
