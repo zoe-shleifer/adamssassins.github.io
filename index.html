@@ -20,68 +20,19 @@
 
         .playfair { font-family: 'Playfair Display', Georgia, serif; }
 
-        .page-frost-layer {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-
-        .nyt-card {
-            background: transparent;
-            border: 1px solid rgba(226, 226, 226, 0.85);
-        }
-
-        .title-frost {
+        .title-block {
             display: inline-block;
             max-width: 100%;
             padding: 0.75rem 1.5rem 1rem;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             box-sizing: border-box;
         }
 
-        .tab-bar-frost {
+        .tab-bar {
             display: inline-flex;
             flex-wrap: wrap;
             align-items: center;
             gap: 0.125rem;
-            padding: 0.25rem 0.5rem;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        .name-frost {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        .name-frost-dead {
-            background: rgba(254, 242, 242, 0.55);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        #player-list {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        .kill-row {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        .kill-row:hover {
-            background: rgba(255, 255, 255, 0.68);
+            padding: 0.25rem 0;
         }
 
         .tab-btn {
@@ -129,32 +80,13 @@
         ::-webkit-scrollbar-track { background: #f7f7f5; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #999; }
-
-        #rules-panel {
-            background: rgb(127, 29, 29);
-            color: #fff;
-        }
-
-        #rules-panel::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.15);
-        }
-
-        #rules-panel::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.35);
-            border-radius: 3px;
-        }
-
-        #rules-panel::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
     </style>
 </head>
 <body>
-    <div class="page-frost-layer" aria-hidden="true"></div>
-    <div class="min-h-screen pb-8 relative z-[1]" style="background: transparent;">
-        <header class="border-b border-gray-300 py-4 px-4 text-center bg-transparent">
+    <div class="min-h-screen pb-8">
+        <header class="py-4 px-4 text-center">
             <div class="max-w-7xl mx-auto">
-                <div class="title-frost mx-auto pb-3 mb-2">
+                <div class="title-block mx-auto pb-3 mb-2">
                     <h1 class="playfair text-4xl md:text-6xl tracking-tight">
                          <span class="text-red-800">Adams</span><span class="text-amber-500">sassins</span>
                     </h1>
@@ -173,8 +105,8 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
 
                 <!-- Left Column: Kill Feed -->
-                <section class="lg:col-span-5 nyt-card">
-                    <div id="kill-feed" class="divide-y divide-gray-100 max-h-[700px] overflow-y-auto">
+                <section class="lg:col-span-5">
+                    <div id="kill-feed" class="divide-y divide-gray-200/80 max-h-[700px] overflow-y-auto">
                         <div id="loading-spinner" class="p-8 text-center text-gray-400 italic text-sm">
                             loading...
                         </div>
@@ -183,10 +115,10 @@
 
                 <!-- Right Column: Player Management -->
                 <section class="lg:col-span-7 flex flex-col gap-4">
-                    <div class="nyt-card">
-                        <div class="px-4 py-2 border-b border-gray-200 bg-transparent">
+                    <div>
+                        <div class="px-0 py-2">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-2">
-                                <div class="tab-bar-frost gap-0.5">
+                                <div class="tab-bar gap-0.5">
                                     <button onclick="setTab('alive')" id="tab-alive" class="tab-btn tab-adams active px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
                                         Alive <span id="count-alive" class="text-red-800/55 ml-0.5">(--)</span>
                                     </button>
@@ -202,7 +134,7 @@
                                 </div>
 
                                 <div class="relative w-full md:w-48 mb-1">
-                                    <input type="text" id="player-search" placeholder="Search..." class="w-full bg-white/55 backdrop-blur-md border-0 py-1.5 px-7 focus:outline-none focus:ring-0 focus:bg-white/70 transition-all text-xs text-gray-700">
+                                    <input type="text" id="player-search" placeholder="Search..." class="w-full bg-transparent border-0 border-b border-gray-300 rounded-none py-1.5 px-7 focus:outline-none focus:ring-0 focus:border-gray-500 transition-colors text-xs text-gray-800">
                                     <i class="fa fa-search absolute left-2.5 top-2 text-gray-300 text-[10px]"></i>
                                 </div>
                             </div>
@@ -210,8 +142,8 @@
 
                         <div id="player-list" class="p-2 grid grid-cols-3 sm:grid-cols-4 gap-1.5 max-h-[550px] overflow-y-auto">
                         </div>
-                        <div id="rules-panel" class="p-4 max-h-[550px] overflow-y-auto rounded-b-sm" style="display:none">
-                            <div class="text-[13px] leading-relaxed">
+                        <div id="rules-panel" class="py-2 max-h-[550px] overflow-y-auto" style="display:none">
+                            <div class="text-[13px] leading-relaxed text-gray-800">
                                 <ul class="space-y-3">
                                     <li>You have been assigned a target.</li>
                                     <li>You must kill them by blasting them with a water gun. Several hundred waterguns are available in the dining hall.</li>
@@ -419,7 +351,7 @@
             }
 
             rosterEl.innerHTML = sorted.map(p => `
-                <div class="px-1.5 py-1 flex flex-col justify-center ${p.status === 'Dead' ? 'name-frost-dead' : 'name-frost'}">
+                <div class="px-1.5 py-1 flex flex-col justify-center ${p.status === 'Dead' ? 'opacity-90' : ''}">
                     <div class="flex items-center gap-1">
                         <span class="w-1.5 h-1.5 rounded-full shrink-0 ${p.status === 'Alive' ? 'bg-green-600' : 'bg-red-600'}"></span>
                         <span class="text-[12px] font-semibold text-gray-900 truncate leading-tight" title="${p.name}">${p.name}</span>
@@ -441,7 +373,7 @@
                 feedEl.innerHTML = `<div class="p-8 text-center text-gray-400 italic playfair">No confirmed kills.</div>`;
             } else {
                 feedEl.innerHTML = currentKillFeed.map(k => `
-                    <div class="kill-row px-4 py-3 border-b border-gray-200/60">
+                    <div class="px-0 py-3">
                         <p class="text-[13px] leading-snug">
                             <span class="font-bold">${k.killer}</span>
                             <span class="text-gray-500">took out</span>
