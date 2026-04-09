@@ -8,160 +8,195 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Quicksand:wght@400;600;700&display=swap');
-        
-        :root {
-            --adams-gold: #f59e0b;
-            --adams-red: #991b1b;
-            --soft-bg: #fffbf0;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Libre+Franklin:wght@400;500;600;700&display=swap');
 
         body {
-            font-family: 'Quicksand', sans-serif;
-            background-color: var(--soft-bg);
-            /* Tiled Background */
+            font-family: 'Libre Franklin', sans-serif;
+            background-color: #f7f7f5;
             background-image: url('acorn_gun.png');
-            background-size: 60px;
+            background-size: 72px;
             background-repeat: repeat;
             background-attachment: fixed;
-            color: #451a03;
+            color: #121212;
             margin: 0;
             padding: 0;
         }
 
-        /* Semi-transparent overlay to ensure text readability over the tiled background */
-        .page-wrapper {
-            background: rgba(255, 251, 240, 0.8);
-            min-height: 100vh;
-            width: 100%;
+        .playfair { font-family: 'Playfair Display', Georgia, serif; }
+
+        .nyt-card {
+            background: transparent;
+            border: 1px solid rgba(226, 226, 226, 0.85);
         }
 
-        .oswald { font-family: 'Oswald', sans-serif; }
+        .title-frost {
+            display: inline-block;
+            max-width: 100%;
+            padding: 0.75rem 1.5rem 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-sizing: border-box;
+        }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
-            border: 2px solid #fff;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 25px -5px rgba(185, 28, 28, 0.15);
+        .tab-bar-frost {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.125rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .name-frost {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .name-frost-dead {
+            background: rgba(254, 242, 242, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        #player-list {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .kill-row {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .kill-row:hover {
-            background: rgba(245, 158, 11, 0.05);
-        }
-
-        .logo-container {
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 1rem;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2));
+            background: rgba(255, 255, 255, 0.68);
         }
 
         .tab-btn {
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             position: relative;
+            color: #666;
+        }
+
+        .tab-btn:hover {
+            color: #121212;
         }
 
         .tab-btn.active {
-            color: #991b1b;
-            background: #fef3c7;
+            color: #121212;
+            font-weight: 700;
         }
 
         .tab-btn.active::after {
             content: '';
             position: absolute;
-            bottom: -2px;
+            bottom: -1px;
             left: 0;
             width: 100%;
             height: 2px;
-            background: #991b1b;
+            background: #121212;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #fef3c7; }
-        ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 0px; }
+        .tab-btn.tab-adams {
+            color: rgb(153, 27, 27);
+        }
+
+        .tab-btn.tab-adams:hover {
+            color: rgb(127, 29, 29);
+        }
+
+        .tab-btn.tab-adams.active {
+            color: rgb(127, 29, 29);
+        }
+
+        .tab-btn.tab-adams.active::after {
+            background: rgb(153, 27, 27);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f7f7f5; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #999; }
     </style>
 </head>
 <body>
-    <div class="page-wrapper pb-12">
-        <!-- Header Section -->
-        <header class="relative py-12 px-6 text-center">
-            <div class="max-w-4xl mx-auto flex flex-col items-center">
-                
-                <h1 class="oswald text-4xl md:text-6xl uppercase tracking-tight mb-3">
-                    <span class="text-red-800">Adams</span><span class="text-amber-500">sassins</span>
-                </h1>
-                <a href="https://groupme.com/join_group/114258842/5GouQktF" target="_blank" class="inline-flex items-center gap-2 bg-red-800 text-white font-bold px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors uppercase tracking-wide text-sm">
-                    <i class="fa fa-comments"></i> Join the GroupMe
-                </a>
+    <div class="min-h-screen pb-8" style="background: transparent;">
+        <header class="border-b border-gray-300 py-4 px-4 text-center bg-transparent">
+            <div class="max-w-7xl mx-auto">
+                <div class="title-frost mx-auto pb-3 mb-2">
+                    <h1 class="playfair text-4xl md:text-6xl tracking-tight">
+                         <span class="text-red-800">Adams</span><span class="text-amber-500">sassins</span>
+                    </h1>
+                </div>
+                <div class="flex items-center justify-center gap-4 text-[11px] text-gray-500 uppercase tracking-widest">
+                    <span>April 11, 2026 &ndash; May 2, 2026</span>
+                    <span class="text-gray-300">|</span>
+                    <a href="https://groupme.com/join_group/114258842/5GouQktF" target="_blank" class="hover:text-gray-900 transition-colors underline underline-offset-2">
+                        Join the GroupMe
+                    </a>
+                </div>
             </div>
         </header>
 
-        <main class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
+        <main class="max-w-7xl mx-auto px-4 mt-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
                 <!-- Left Column: Kill Feed -->
-                <section class="lg:col-span-5 glass-card overflow-hidden">
-                    <div id="kill-feed" class="divide-y divide-amber-50 max-h-[700px] overflow-y-auto">
-                        <div id="loading-spinner" class="p-12 text-center text-amber-600 italic font-bold">
+                <section class="lg:col-span-5 nyt-card">
+                    <div id="kill-feed" class="divide-y divide-gray-100 max-h-[700px] overflow-y-auto">
+                        <div id="loading-spinner" class="p-8 text-center text-gray-400 italic text-sm">
                             loading...
                         </div>
                     </div>
                 </section>
 
                 <!-- Right Column: Player Management -->
-                <section class="lg:col-span-7 flex flex-col gap-6">
-                    <div class="glass-card overflow-hidden">
-                        <!-- Tabbed Header -->
-                        <div class="p-6 pb-0 border-b border-amber-100 bg-white/60">
-                            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-4">
-                                <div class="flex gap-1">
-                                    <button onclick="setTab('all')" id="tab-all" class="tab-btn active px-4 py-2 oswald text-xl uppercase tracking-wide rounded-t-md hover:bg-amber-50">
-                                        All <span id="count-all" class="text-xs font-sans text-amber-500 ml-1">(--)</span>
+                <section class="lg:col-span-7 flex flex-col gap-4">
+                    <div class="nyt-card">
+                        <div class="px-4 py-2 border-b border-gray-200 bg-transparent">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-2">
+                                <div class="tab-bar-frost gap-0.5">
+                                    <button onclick="setTab('alive')" id="tab-alive" class="tab-btn tab-adams active px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
+                                        Alive <span id="count-alive" class="text-red-800/55 ml-0.5">(--)</span>
                                     </button>
-                                    <button onclick="setTab('alive')" id="tab-alive" class="tab-btn px-4 py-2 oswald text-xl uppercase tracking-wide rounded-t-md hover:bg-amber-50">
-                                        Alive <span id="count-alive" class="text-xs font-sans text-emerald-500 ml-1">(--)</span>
+                                    <button onclick="setTab('dead')" id="tab-dead" class="tab-btn tab-adams px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
+                                        Dead <span id="count-dead" class="text-red-800/55 ml-0.5">(--)</span>
                                     </button>
-                                    <button onclick="setTab('dead')" id="tab-dead" class="tab-btn px-4 py-2 oswald text-xl uppercase tracking-wide rounded-t-md hover:bg-amber-50">
-                                        Dead <span id="count-dead" class="text-xs font-sans text-red-500 ml-1">(--)</span>
+                                    <button onclick="setTab('all')" id="tab-all" class="tab-btn tab-adams px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
+                                        All <span id="count-all" class="text-red-800/55 ml-0.5">(--)</span>
                                     </button>
-                                    <button onclick="setTab('rules')" id="tab-rules" class="tab-btn px-4 py-2 oswald text-xl uppercase tracking-wide rounded-t-md hover:bg-amber-50">
+                                    <button onclick="setTab('rules')" id="tab-rules" class="tab-btn tab-adams px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
                                         Rules
                                     </button>
                                 </div>
-                                
-                                <div class="relative w-full md:w-64 mb-2">
-                                    <input type="text" id="player-search" placeholder="Search..." class="w-full bg-white border-2 border-amber-100 rounded-md py-2 px-10 focus:outline-none focus:border-amber-400 transition-all text-sm font-semibold text-amber-900 shadow-sm">
-                                    <i class="fa fa-search absolute left-3.5 top-2.5 text-amber-300"></i>
+
+                                <div class="relative w-full md:w-48 mb-1">
+                                    <input type="text" id="player-search" placeholder="Search..." class="w-full bg-white/55 backdrop-blur-md border-0 py-1.5 px-7 focus:outline-none focus:ring-0 focus:bg-white/70 transition-all text-xs text-gray-700">
+                                    <i class="fa fa-search absolute left-2.5 top-2 text-gray-300 text-[10px]"></i>
                                 </div>
                             </div>
                         </div>
 
-                        <div id="player-list" class="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[550px] overflow-y-auto bg-white/40">
+                        <div id="player-list" class="p-2 grid grid-cols-3 sm:grid-cols-4 gap-1.5 max-h-[550px] overflow-y-auto">
                         </div>
-                        <div id="rules-panel" class="p-6 max-h-[550px] overflow-y-auto bg-white/40" style="display:none">
-                            <div class="space-y-4 text-amber-950 text-sm font-semibold">
-                                <ul class="list-disc list-inside space-y-3 leading-relaxed">
+                        <div id="rules-panel" class="p-4 max-h-[550px] overflow-y-auto" style="display:none">
+                            <div class="text-gray-700 text-[13px] leading-relaxed">
+                                <ul class="space-y-3">
                                     <li>You have been assigned a target.</li>
-                                    <li>You must kill them by blasting them with a water gun. Several hundred waterguns are available in the dining hall. </li>
+                                    <li>You must kill them by blasting them with a water gun. Several hundred waterguns are available in the dining hall.</li>
                                     <li>When you eliminate your target, you <strong>inherit their target</strong> as your new assignment.</li>
                                     <li>If you do not have any kills by 19:31 on Tuesday 4/14, you will be <strong>eliminated</strong>.</li>
                                     <li>The game continues until only <strong>one nut remains</strong>.</li>
                                     <li><strong>Safe zones:</strong> Adams Library is safe. The site of an active lecture, lab, seminar or section is safe. A scheduled lecture which has not begun is not safe. A lecture which extends past its official end time is safe. Office Hours are not safe. Disrupting the function of the university is unadvisable and morally problematic.</li>
-                                    <li><strong>Dining Hall safety:</strong> All house serveries are safe. If you are sitting down in the Adams dhall (does not russel dining room, greenhouse etc.) you are safe. This include kneeling, sitting on the floor, sitting on a table, sitting on the ceiling, whatever. Standing / walking in the dining hall is unsafe. </li>
-                                    <li> <strong> To report a kill</strong> , text (# in the groupme) or email Zoe with a picture of you and your target together to get your next name. After a kill, you may ask your target for their target's name to avoid latency. </li>
-                                    <li><strong>Safe Items:</strong>  From 4/11 - 4/13 at noon, you will be granted immunity with swimming goggles on your head or Adams boxers as your outermost layer. </li>
+                                    <li><strong>Dining Hall safety:</strong> All house serveries are safe. If you are sitting down in the Adams dhall (does not russel dining room, greenhouse etc.) you are safe. This include kneeling, sitting on the floor, sitting on a table, sitting on the ceiling, whatever. Standing / walking in the dining hall is unsafe.</li>
+                                    <li><strong>To report a kill</strong>, text (# in the groupme) or email Zoe with a picture of you and your target together to get your next name. After a kill, you may ask your target for their target's name to avoid latency.</li>
+                                    <li><strong>Safe Items:</strong> From 4/11 - 4/13 at noon, you will be granted immunity with swimming goggles on your head or Adams boxers as your outermost layer.</li>
                                 </ul>
                             </div>
                         </div>
@@ -178,7 +213,7 @@
 
         let currentPlayers = [];
         let currentKillFeed = [];
-        let currentTab = 'all';
+        let currentTab = 'alive';
 
         const getCsvUrl = (id) => `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=0`;
 
@@ -257,13 +292,13 @@
                 const rosterText = await rosterRes.text();
                 const killsText = await killsRes.text();
 
-                const rosterRows = parseCSV(rosterText); 
-                const killsRows = parseCSV(killsText);   
-                
+                const rosterRows = parseCSV(rosterText);
+                const killsRows = parseCSV(killsText);
+
                 processData(rosterRows, killsRows);
             } catch (error) {
                 console.error('Data error:', error);
-                document.getElementById('kill-feed').innerHTML = `<div class="p-12 text-center text-red-700 font-bold uppercase">Sync Failure. Check Permissions.</div>`;
+                document.getElementById('kill-feed').innerHTML = `<div class="p-8 text-center text-red-700 text-sm">Sync Failure. Check Permissions.</div>`;
             }
         }
 
@@ -293,7 +328,7 @@
                 killsData.slice(1).forEach(row => {
                     const killerName = formatName(row[kIdx]?.trim());
                     const victimName = formatName(row[tIdx]?.trim());
-                    
+
                     if (victimName && playerMap.has(victimName)) {
                         const victimObj = playerMap.get(victimName);
                         if (victimObj.status === 'Alive') {
@@ -345,69 +380,53 @@
 
         function renderRoster(filter = '') {
             const rosterEl = document.getElementById('player-list');
-            
+
             let filtered = currentPlayers.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
-            
+
             if (currentTab === 'alive') filtered = filtered.filter(p => p.status === 'Alive');
             if (currentTab === 'dead') filtered = filtered.filter(p => p.status === 'Dead');
 
-            const sorted = filtered.sort((a, b) => getLastName(a.name).localeCompare(getLastName(b.name)));
+            const sorted = filtered.sort((a, b) => b.kills - a.kills || getLastName(a.name).localeCompare(getLastName(b.name)));
 
             if (sorted.length === 0) {
-                rosterEl.innerHTML = `<div class="col-span-full p-12 text-center text-amber-600/50 italic">No players found.</div>`;
+                rosterEl.innerHTML = `<div class="col-span-full p-8 text-center text-gray-400 italic text-sm">No players found.</div>`;
                 return;
             }
 
             rosterEl.innerHTML = sorted.map(p => `
-                <div class="relative p-2.5 rounded-md bg-white border-2 ${p.status === 'Alive' ? 'border-amber-100' : 'border-red-50 bg-slate-50 opacity-80'} transition-all flex flex-col gap-1 shadow-sm justify-center">
-                    <div class="flex justify-between items-start">
-                        <div class="min-w-0">
-                            <h3 class="font-bold text-sm text-amber-950 truncate pr-2 uppercase tracking-tight" title="${p.name}">${p.name}</h3>
-                            <div class="flex items-center gap-1.5 mt-1">
-                                <span class="w-1.5 h-1.5 rounded-full ${p.status === 'Alive' ? 'bg-emerald-500' : 'bg-red-500'}"></span>
-                                <span class="text-[9px] font-black uppercase tracking-widest ${p.status === 'Alive' ? 'text-emerald-600' : 'text-red-500'}">
-                                    ${p.status === 'Alive' ? 'Alive' : 'Dead'}
-                                </span>
-                            </div>
-                        </div>
+                <div class="px-1.5 py-1 flex flex-col justify-center ${p.status === 'Dead' ? 'name-frost-dead' : 'name-frost'}">
+                    <div class="flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full shrink-0 ${p.status === 'Alive' ? 'bg-green-600' : 'bg-red-600'}"></span>
+                        <span class="text-[12px] font-semibold text-gray-900 truncate leading-tight" title="${p.name}">${p.name}</span>
+                        ${p.kills > 0 ? `<span class="text-[10px] font-bold text-white bg-gray-900 px-1 py-0 shrink-0 leading-tight" style="font-family: 'Courier New', monospace;">${p.kills}</span>` : ''}
                     </div>
-                    ${p.status === 'Dead' ? `
-                        <div class="mt-1 pt-1 border-t border-red-100 text-[8px] text-red-600 font-bold uppercase tracking-tighter truncate">
-                            Killed by ${p.killedBy}
-                        </div>
-                    ` : ''}
+                    ${p.status === 'Dead' ? `<div class="text-[8px] truncate ml-2.5"><span class="text-red-600 font-bold uppercase">Dead</span> <span class="text-gray-400">by ${p.killedBy}</span></div>` : ''}
                 </div>
             `).join('');
         }
 
         function renderUI() {
             const feedEl = document.getElementById('kill-feed');
-            
+
             document.getElementById('count-all').innerText = `(${currentPlayers.length})`;
             document.getElementById('count-alive').innerText = `(${currentPlayers.filter(p => p.status === 'Alive').length})`;
             document.getElementById('count-dead').innerText = `(${currentPlayers.filter(p => p.status === 'Dead').length})`;
 
             if (currentKillFeed.length === 0) {
-                feedEl.innerHTML = `<div class="p-12 text-center text-amber-600 font-bold uppercase tracking-widest italic">No kills yet ... let the bloodshed begin.</div>`;
+                feedEl.innerHTML = `<div class="p-8 text-center text-gray-400 italic playfair">No confirmed kills.</div>`;
             } else {
                 feedEl.innerHTML = currentKillFeed.map(k => `
-                    <div class="kill-row p-5 transition-all bg-white/40 border-b border-amber-50">
-                        <div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between items-start gap-2 mb-1">
-                                    <span class="font-bold text-base leading-tight">
-                                        <span class="text-amber-600">${k.killer}</span> 
-                                        <span class="text-red-900/60 font-bold lowercase mx-1">took out</span> 
-                                        <span class="text-red-800">${k.victim}</span>
-                                    </span>
-                                </div>
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="bg-amber-100 text-amber-900 text-[9px] font-black px-2 py-0.5 rounded-sm uppercase tracking-tighter">Location: ${k.location}</span>
-                                    <span class="text-[9px] text-amber-400 font-bold uppercase">${k.time ? k.time.split(' ')[0] : ''}</span>
-                                </div>
-                                ${k.desc ? `<p class="text-amber-900/70 text-xs italic bg-white/60 p-2 rounded-sm border border-amber-100/50">${k.desc}</p>` : ''}
-                            </div>
+                    <div class="kill-row px-4 py-3 border-b border-gray-200/60">
+                        <p class="text-[13px] leading-snug">
+                            <span class="font-bold">${k.killer}</span>
+                            <span class="text-gray-500">took out</span>
+                            <span class="font-bold">${k.victim}</span>
+                        </p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-[10px] text-gray-400 uppercase tracking-wider">${k.location}</span>
+                            <span class="text-[10px] text-gray-300">${k.time ? k.time.split(' ')[0] : ''}</span>
                         </div>
+                        ${k.desc ? `<p class="playfair italic text-[12px] text-gray-500 mt-1.5 leading-snug border-l-2 border-gray-200 pl-2">${k.desc}</p>` : ''}
                     </div>
                 `).join('');
             }
