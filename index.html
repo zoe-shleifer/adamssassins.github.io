@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adamssassins</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Quicksand:wght@400;600;700&display=swap');
+        
+        :root {
+            --adams-gold: #f59e0b;
+            --adams-red: #991b1b;
+            --soft-bg: #fffbf0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--soft-bg);
+            /* Tiled Background */
+            background-image: url('acorn_gun.png');
+            background-size: 60px;
+            background-repeat: repeat;
+            background-attachment: fixed;
+            color: #451a03;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Semi-transparent overlay to ensure text readability over the tiled background */
+        .page-wrapper {
+            background: rgba(255, 251, 240, 0.8);
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .oswald { font-family: 'Oswald', sans-serif; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 2px solid #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px -5px rgba(185, 28, 28, 0.15);
+        }
+
+        .kill-row:hover {
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .logo-container {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 1rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2));
+        }
+
+        .tab-btn {
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: #991b1b;
+            background: #fef3c7;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #991b1b;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fef3c7; }
+        ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 0px; }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper pb-12">
+        <!-- Header Section -->
+        <header class="relative py-12 px-6 text-center">
+            <div class="max-w-4xl mx-auto flex flex-col items-center">
+                
+                <h1 class="oswald text-4xl md:text-6xl uppercase tracking-tight mb-3">
+                    <span class="text-red-800">Adams</span><span class="text-amber-500">sassins</span>
+                </h1>
+                <a href="https://groupme.com/join_group/114258842/YfVh9srQ" target="_blank" class="inline-flex items-center gap-2 bg-red-800 text-white font-bold px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors uppercase tracking-wide text-sm">
+                    <i class="fa fa-comments"></i> Join the GroupMe
+                </a>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left Column: Kill Feed -->
+                <section class="lg:col-span-5 glass-card overflow-hidden">
+                    <div class="p-6 border-b border-amber-100 bg-white/60">
+                        <h2 class="oswald text-2xl text-red-800 uppercase">Kill Feed</h2>
+                    </div>
+                    <div id="kill-feed" class="divide-y divide-amber-50 max-h-[700px] overflow-y-auto">
+                        <div id="loading-spinner" class="p-12 text-center text-amber-600 italic font-bold">
+                            Accessing encrypted logs...
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right Column: Player Management -->
+                <section class="lg:col-span-7 flex flex-col gap-6">
+                    <div class="glass-card overflow-hidden">
+                        <!-- Tabbed Header -->
+                        <div class="p-6 pb-0 border-b border-amber-100 bg-white/60">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-4">
+                                <div class="flex gap-1">
+                                    <button onclick="setTab('all')" id="tab-all" class="tab-btn active px-4 py-2 oswald text-xl uppercase tracking-wide rounded-t-md hover:bg-amber-50">
+                                        All <span id="count-all" class="text-xs font-sans text-amber-500 ml-1">(--)</span>
+                                    </button>
+                                    <button onclick="setTab('alive')" id="tab-alive" class="tab-btn px-4 py-2 oswald text-xl uppercase tracking-wide rounded-t-md hover:bg-amber-50">
+                                        Alive <span id="count-alive" class="text-xs font-sans text-emerald-500 ml-1">(--)</span>
+                                    </button>
+                                    <button onclick="setTab('dead')" id="tab-dead" class="tab-btn px-4 py-2 oswald text-xl uppercase tracking-wide rounded-t-md hover:bg-amber-50">
+                                        Dead <span id="count-dead" class="text-xs font-sans text-red-500 ml-1">(--)</span>
+                                    </button>
+                                    <button onclick="setTab('rules')" id="tab-rules" class="tab-btn px-4 py-2 oswald text-xl uppercase tracking-wide rounded-t-md hover:bg-amber-50">
+                                        Rules
+                                    </button>
+                                </div>
+                                
+                                <div class="relative w-full md:w-64 mb-2">
+                                    <input type="text" id="player-search" placeholder="Search..." class="w-full bg-white border-2 border-amber-100 rounded-md py-2 px-10 focus:outline-none focus:border-amber-400 transition-all text-sm font-semibold text-amber-900 shadow-sm">
+                                    <i class="fa fa-search absolute left-3.5 top-2.5 text-amber-300"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="player-list" class="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[550px] overflow-y-auto bg-white/40">
+                        </div>
+                        <div id="rules-panel" class="p-6 max-h-[550px] overflow-y-auto bg-white/40" style="display:none">
+                            <div class="space-y-4 text-amber-950 text-sm font-semibold">
+                                <ul class="list-disc list-inside space-y-3 leading-relaxed">
+                                    <li>You have been assigned a target.</li>
+                                    <li>You must kill them by blasting them with a water gun. Several hundred waterguns are available in the dining hall. </li>
+                                    <li>When you eliminate your target, you <strong>inherit their target</strong> as your new assignment.</li>
+                                    <li>The game continues until only <strong>one nut remains</strong>.</li>
+                                    <li><strong>Safe zones:</strong> Adams Library is safe. The site of an active lecture, lab, seminar or section is safe. A scheduled lecture which has not begun is not fair play. A lecture which extends past its official end time is safe. Office Hours are not safe. Disrupting the function of the university is unadvisable and morally problematic.</li>
+                                    <li><strong>D-Hall safety:</strong> The servery is safe (for now...) If you are sitting down anywhere in the dhall proper (not russel dining room, greenhouse etc.) you are safe. This include kneeling, sitting on the floor, sitting in a dhall chair, sitting on a table, sitting on the ceiling etc. Standing / walking in the dining hall is unsafe. </li>
+                                    <li> <strong> To report a kill</strong> , text (# in the groupme) or email Zoe with a picture of you and your target together to get your next name. It is wise to ask your target for their targets name once you kill them to avoid latency. </li>
+                                    <li><strong>Safe Items:</strong>  From 4/11 - 4/13 at noon, the safe items will be goggles on your head or Adams boxers as your outermost layer. </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const ROSTER_SHEET_ID = '1Xe6-8iwSQwpJEVsZc5cko6B5jDKOTyNSHD6nr7tMOl4';
+        const KILLS_SHEET_ID = '1eLd4v4svDrogs6e_SiJ76EjalDCTfSmYiQnEbZoXMdI';
+
+        let currentPlayers = [];
+        let currentKillFeed = [];
+        let currentTab = 'all';
+
+        const getCsvUrl = (id) => `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=0`;
+
+        function formatName(str) {
+            if (!str) return "";
+            return str.trim()
+                .toLowerCase()
+                .split(/\s+/)
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+
+        function parseCSV(text) {
+            const rows = [];
+            let currentRow = [];
+            let currentField = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const nextChar = text[i + 1];
+                if (char === '"' && inQuotes && nextChar === '"') { currentField += '"'; i++; }
+                else if (char === '"') { inQuotes = !inQuotes; }
+                else if (char === ',' && !inQuotes) { currentRow.push(currentField); currentField = ''; }
+                else if ((char === '\r' || char === '\n') && !inQuotes) {
+                    if (currentRow.length > 0 || currentField !== '') {
+                        currentRow.push(currentField);
+                        rows.push(currentRow);
+                        currentRow = [];
+                        currentField = '';
+                    }
+                    if (char === '\r' && nextChar === '\n') i++;
+                } else { currentField += char; }
+            }
+            if (currentRow.length > 0 || currentField !== '') { currentRow.push(currentField); rows.push(currentRow); }
+            return rows;
+        }
+
+        async function fetchWithRetry(url, retries = 5, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, { cache: 'no-store' });
+                    if (response.ok) return response;
+                } catch (e) { if (i === retries - 1) throw e; }
+                await new Promise(res => setTimeout(res, delay));
+                delay *= 2;
+            }
+            throw new Error(`Failed to fetch`);
+        }
+
+        function findHeaderIndices(headerRow, targets) {
+            const indices = {};
+            if (!headerRow) return indices;
+            headerRow.forEach((h, i) => {
+                const clean = h.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+                targets.forEach(t => {
+                    const cleanTarget = t.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+                    if (clean === cleanTarget || clean.includes(cleanTarget)) indices[t] = i;
+                });
+            });
+            return indices;
+        }
+
+        function getLastName(fullName) {
+            if (!fullName) return "";
+            const parts = fullName.trim().split(/\s+/);
+            return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : parts[0].toLowerCase();
+        }
+
+        async function fetchData() {
+            try {
+                const [rosterRes, killsRes] = await Promise.all([
+                    fetchWithRetry(getCsvUrl(ROSTER_SHEET_ID)),
+                    fetchWithRetry(getCsvUrl(KILLS_SHEET_ID))
+                ]);
+
+                const rosterText = await rosterRes.text();
+                const killsText = await killsRes.text();
+
+                const rosterRows = parseCSV(rosterText); 
+                const killsRows = parseCSV(killsText);   
+                
+                processData(rosterRows, killsRows);
+            } catch (error) {
+                console.error('Data error:', error);
+                document.getElementById('kill-feed').innerHTML = `<div class="p-12 text-center text-red-700 font-bold uppercase">Sync Failure. Check Permissions.</div>`;
+            }
+        }
+
+        function processData(rosterData, killsData) {
+            const playerMap = new Map();
+            const killFeed = [];
+
+            const rosterHeaders = findHeaderIndices(rosterData[0], ['name']);
+            const nameIdx = rosterHeaders['name'] ?? 0;
+
+            rosterData.slice(1).forEach(row => {
+                const rawName = row[nameIdx]?.trim();
+                if (rawName && rawName.length > 1) {
+                    const normalized = formatName(rawName);
+                    playerMap.set(normalized, { name: normalized, status: 'Alive', killedBy: null, location: 'Field', kills: 0 });
+                }
+            });
+
+            if (killsData && killsData.length > 1) {
+                const killsHeaders = findHeaderIndices(killsData[0], ['killer', 'target', 'timestamp', 'location', 'description']);
+                const kIdx = killsHeaders['killer'] ?? 1;
+                const tIdx = killsHeaders['target'] ?? 2;
+                const timeIdx = killsHeaders['timestamp'];
+                const locIdx = killsHeaders['location'];
+                const descIdx = killsHeaders['description'];
+
+                killsData.slice(1).forEach(row => {
+                    const killerName = formatName(row[kIdx]?.trim());
+                    const victimName = formatName(row[tIdx]?.trim());
+                    
+                    if (victimName && playerMap.has(victimName)) {
+                        const victimObj = playerMap.get(victimName);
+                        if (victimObj.status === 'Alive') {
+                            victimObj.status = 'Dead';
+                            victimObj.killedBy = killerName || 'Unknown';
+                            victimObj.location = locIdx !== undefined ? row[locIdx]?.trim() : 'Field';
+
+                            if (killerName && playerMap.has(killerName)) {
+                                playerMap.get(killerName).kills += 1;
+                            }
+
+                            killFeed.unshift({
+                                time: timeIdx !== undefined ? row[timeIdx] : '',
+                                killer: killerName || 'Unknown',
+                                victim: victimName,
+                                location: victimObj.location,
+                                desc: descIdx !== undefined ? row[descIdx]?.trim() : ''
+                            });
+                        }
+                    }
+                });
+            }
+
+            currentPlayers = Array.from(playerMap.values());
+            currentKillFeed = killFeed;
+            renderUI();
+        }
+
+        function setTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+
+            const playerList = document.getElementById('player-list');
+            const rulesPanel = document.getElementById('rules-panel');
+            const searchBox = document.getElementById('player-search').parentElement;
+
+            if (tab === 'rules') {
+                playerList.style.display = 'none';
+                searchBox.style.display = 'none';
+                rulesPanel.style.display = 'block';
+            } else {
+                playerList.style.display = '';
+                searchBox.style.display = '';
+                rulesPanel.style.display = 'none';
+                renderRoster(document.getElementById('player-search').value);
+            }
+        }
+
+        function renderRoster(filter = '') {
+            const rosterEl = document.getElementById('player-list');
+            
+            let filtered = currentPlayers.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+            
+            if (currentTab === 'alive') filtered = filtered.filter(p => p.status === 'Alive');
+            if (currentTab === 'dead') filtered = filtered.filter(p => p.status === 'Dead');
+
+            const sorted = filtered.sort((a, b) => getLastName(a.name).localeCompare(getLastName(b.name)));
+
+            if (sorted.length === 0) {
+                rosterEl.innerHTML = `<div class="col-span-full p-12 text-center text-amber-600/50 italic">No players found.</div>`;
+                return;
+            }
+
+            rosterEl.innerHTML = sorted.map(p => `
+                <div class="relative p-2.5 rounded-md bg-white border-2 ${p.status === 'Alive' ? 'border-amber-100' : 'border-red-50 bg-slate-50 opacity-80'} transition-all flex flex-col gap-1 shadow-sm justify-center">
+                    <div class="flex justify-between items-start">
+                        <div class="min-w-0">
+                            <h3 class="font-bold text-sm text-amber-950 truncate pr-2 uppercase tracking-tight" title="${p.name}">${p.name}</h3>
+                            <div class="flex items-center gap-1.5 mt-1">
+                                <span class="w-1.5 h-1.5 rounded-full ${p.status === 'Alive' ? 'bg-emerald-500' : 'bg-red-500'}"></span>
+                                <span class="text-[9px] font-black uppercase tracking-widest ${p.status === 'Alive' ? 'text-emerald-600' : 'text-red-500'}">
+                                    ${p.status === 'Alive' ? 'Alive' : 'Dead'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    ${p.status === 'Dead' ? `
+                        <div class="mt-1 pt-1 border-t border-red-100 text-[8px] text-red-600 font-bold uppercase tracking-tighter truncate">
+                            Killed by ${p.killedBy}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderUI() {
+            const feedEl = document.getElementById('kill-feed');
+            
+            document.getElementById('count-all').innerText = `(${currentPlayers.length})`;
+            document.getElementById('count-alive').innerText = `(${currentPlayers.filter(p => p.status === 'Alive').length})`;
+            document.getElementById('count-dead').innerText = `(${currentPlayers.filter(p => p.status === 'Dead').length})`;
+
+            if (currentKillFeed.length === 0) {
+                feedEl.innerHTML = `<div class="p-12 text-center text-amber-600 font-bold uppercase tracking-widest italic">No confirmed kills in logs.</div>`;
+            } else {
+                feedEl.innerHTML = currentKillFeed.map(k => `
+                    <div class="kill-row p-5 transition-all bg-white/40 border-b border-amber-50">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 bg-red-100 rounded-sm flex items-center justify-center text-red-700 shrink-0 border border-red-200">
+                                <i class="fa fa-skull text-lg"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start gap-2 mb-1">
+                                    <span class="font-bold text-base leading-tight">
+                                        <span class="text-amber-600">${k.killer}</span> 
+                                        <span class="text-red-900/60 font-bold lowercase mx-1">took out</span> 
+                                        <span class="text-red-800">${k.victim}</span>
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="bg-amber-100 text-amber-900 text-[9px] font-black px-2 py-0.5 rounded-sm uppercase tracking-tighter">Location: ${k.location}</span>
+                                    <span class="text-[9px] text-amber-400 font-bold uppercase">${k.time ? k.time.split(' ')[0] : ''}</span>
+                                </div>
+                                ${k.desc ? `<p class="text-amber-900/70 text-xs italic bg-white/60 p-2 rounded-sm border border-amber-100/50">${k.desc}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderRoster(document.getElementById('player-search').value);
+        }
+
+        window.onload = fetchData;
+        document.getElementById('player-search').oninput = (e) => renderRoster(e.target.value);
+        setInterval(fetchData, 60000);
+    </script>
+</body>
+</html>
