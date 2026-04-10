@@ -80,11 +80,18 @@
         ::-webkit-scrollbar-track { background: #f7f7f5; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #999; }
+
+        /* Keep pan gestures on list/feed scrollers; reduce scroll chaining to the page (esp. mobile). */
+        .scroll-pane {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
+            touch-action: pan-y;
+        }
     </style>
 </head>
 <body>
-    <div class="min-h-screen pb-8">
-        <header class="py-4 px-4 text-center">
+    <div class="min-h-screen pb-8 max-md:min-h-[100dvh] max-md:flex max-md:flex-col">
+        <header class="py-4 px-4 text-center shrink-0">
             <div class="max-w-7xl mx-auto">
                 <div class="title-block mx-auto pb-3 mb-2">
                     <h1 class="playfair text-4xl md:text-6xl tracking-tight">
@@ -101,12 +108,12 @@
             </div>
         </header>
 
-        <main class="max-w-7xl mx-auto px-4 mt-4">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <main class="max-w-7xl mx-auto px-4 mt-4 w-full max-md:flex-1 max-md:min-h-0 max-md:flex max-md:flex-col">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start max-md:flex-1 max-md:min-h-0 max-md:grid-rows-[auto_minmax(0,1fr)] max-md:items-stretch w-full">
 
                 <!-- Left Column: Kill Feed -->
-                <section class="lg:col-span-5">
-                    <div id="kill-feed" class="divide-y divide-gray-200/80 max-h-[700px] overflow-y-auto">
+                <section class="md:col-span-4 max-md:min-h-0">
+                    <div id="kill-feed" class="scroll-pane divide-y divide-gray-200/80 max-h-[min(280px,42vh)] md:max-h-[700px] overflow-y-auto">
                         <div id="loading-spinner" class="p-8 text-center text-gray-400 italic text-sm">
                             loading...
                         </div>
@@ -114,9 +121,9 @@
                 </section>
 
                 <!-- Right Column: Player Management -->
-                <section class="lg:col-span-7 flex flex-col gap-4">
-                    <div>
-                        <div class="px-0 py-2">
+                <section class="md:col-span-8 flex flex-col gap-4 max-md:min-h-0 max-md:flex-1">
+                    <div class="max-md:flex max-md:flex-col max-md:min-h-0 max-md:flex-1">
+                        <div class="px-0 py-2 shrink-0">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-2">
                                 <div class="tab-bar gap-0.5">
                                     <button onclick="setTab('alive')" id="tab-alive" class="tab-btn tab-adams active px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
@@ -140,9 +147,9 @@
                             </div>
                         </div>
 
-                        <div id="player-list" class="p-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 max-h-[550px] overflow-y-auto">
+                        <div id="player-list" class="scroll-pane p-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 max-md:flex-1 max-md:min-h-0 max-md:max-h-none max-h-[550px] overflow-y-auto">
                         </div>
-                        <div id="rules-panel" class="py-2 max-h-[550px] overflow-y-auto" style="display:none">
+                        <div id="rules-panel" class="scroll-pane py-2 max-md:flex-1 max-md:min-h-0 max-md:max-h-none max-h-[550px] overflow-y-auto" style="display:none">
                             <div class="text-[13px] leading-relaxed text-gray-800">
                                 <ul class="space-y-3">
                                     <li>You have been assigned a target.</li>
