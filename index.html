@@ -98,25 +98,25 @@
                          <span class="text-red-800">Adams</span><span class="text-amber-500">sassins</span>
                     </h1>
                 </div>
-                <div class="w-full max-w-2xl mx-auto px-3 mb-4">
+                <div class="w-full max-w-3xl mx-auto px-3 mb-4">
                     <p class="text-[10px] font-semibold uppercase tracking-widest text-red-900 mb-3 text-center">Safe items</p>
-                    <div class="grid grid-cols-1 xs:grid-cols-[auto_1fr] sm:grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-[13px] leading-snug [&>div:nth-child(odd)]:text-left [&>div:nth-child(even)]:text-right">
-                        <!-- two-row tabular layout: time | items -->
-                    </div>
-                    <div class="grid grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-x-6 gap-y-3 text-[13px] leading-snug items-start">
-                        <div class="font-semibold text-red-950 text-left tabular-nums">
-                            Sun 11:59 PM<br aria-hidden="true"><span class="text-gray-400 font-normal text-[11px]">&ndash;</span><br aria-hidden="true">Mon 11:59 PM
-                        </div>
-                        <div class="text-gray-900 text-right min-w-0">
-                            Touching a fork to your nose, or Adams boxers as your outermost layer.
-                        </div>
-                        <div class="font-semibold text-red-950 text-left tabular-nums">
-                            Mon 11:59 PM<br aria-hidden="true"><span class="text-gray-400 font-normal text-[11px]">&ndash;</span><br aria-hidden="true">Tue 19:31
-                        </div>
-                        <div class="text-gray-900 text-right min-w-0">
-                            None. Let chaos reign.
-                        </div>
-                    </div>
+                    <table class="w-full table-fixed border-collapse text-[13px] leading-snug">
+                        <caption class="sr-only">Safe item time windows and conditions</caption>
+                        <colgroup>
+                            <col class="w-[65%]" />
+                            <col class="w-[35%]" />
+                        </colgroup>
+                        <tbody>
+                            <tr class="align-top">
+                                <td class="pr-5 sm:pr-8 pb-3 font-semibold text-red-950 text-left align-top">Sunday 11:59 PM &ndash; Monday 11:59 PM</td>
+                                <td class="pb-3 pl-0 text-gray-900 text-left align-top min-w-0 break-words">Touching a fork to your nose, or Adams boxers as your outermost layer.</td>
+                            </tr>
+                            <tr class="align-top">
+                                <td class="pr-5 sm:pr-8 font-semibold text-red-950 text-left align-top">Monday 11:59 PM &ndash; Tuesday 7:31 PM (19:31)</td>
+                                <td class="pl-0 text-gray-900 text-left align-top min-w-0 break-words">None. Let chaos reign.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="flex items-center justify-center gap-4 text-[11px] text-gray-500 uppercase tracking-widest">
                     <span>April 11, 2026 &ndash; May 2, 2026</span>
