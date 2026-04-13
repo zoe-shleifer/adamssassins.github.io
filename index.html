@@ -87,6 +87,11 @@
             overscroll-behavior-y: contain;
             touch-action: pan-y;
         }
+
+        /* Roster: names in #safe-people-data (JSON) render in blue */
+        .safe-name {
+            color: rgb(37, 99, 235);
+        }
     </style>
 </head>
 <body>
@@ -98,34 +103,27 @@
                          <span class="text-red-800">Adams</span><span class="text-amber-500">sassins</span>
                     </h1>
                 </div>
-                <div class="w-full max-w-3xl lg:max-w-xl xl:max-w-lg mx-auto px-3 mb-4">
-                    <div class="border border-red-200/90 bg-red-50/90 rounded-sm px-4 py-3 shadow-sm">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-red-900 mb-3 text-center">Safe items</p>
-                    <table class="w-full table-fixed border-collapse text-[13px] leading-snug">
-                        <caption class="sr-only">Safe item time windows and conditions</caption>
-                        <colgroup>
-                            <col class="w-[65%]" />
-                            <col class="w-[35%]" />
-                        </colgroup>
-                        <tbody>
-                            <tr class="align-top">
-                                <td class="pr-5 sm:pr-8 pb-3 font-semibold text-red-950 text-left align-top">Sun 11:59 PM &ndash; Mon 11:59 PM</td>
-                                <td class="pb-3 pl-0 text-gray-900 text-left align-top min-w-0 break-words">Touching a fork to your nose, or Adams boxers as your outermost layer.</td>
-                            </tr>
-                            <tr class="align-top">
-                                <td class="pr-5 sm:pr-8 font-semibold text-red-950 text-left align-top">Mon 11:59 PM &ndash; Tues 19:31</td>
-                                <td class="pl-0 text-gray-900 text-left align-top min-w-0 break-words">None. Let chaos reign.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center gap-4 text-[11px] text-gray-500 uppercase tracking-widest">
+                <div class="flex items-center justify-center gap-4 text-[11px] text-gray-500 uppercase tracking-widest mb-5">
                     <span>April 11, 2026 &ndash; May 2, 2026</span>
                     <span class="text-gray-300">|</span>
                     <a href="https://groupme.com/join_group/114258842/5GouQktF" target="_blank" class="hover:text-gray-900 transition-colors underline underline-offset-2">
                         Join the GroupMe
                     </a>
+                </div>
+                <div class="w-full max-w-[17rem] sm:max-w-xs mx-auto px-3">
+                    <div class="border border-red-200/90 bg-red-50/90 rounded-sm px-3 py-3 shadow-sm">
+                        <p class="text-[10px] font-semibold uppercase tracking-widest text-red-900 mb-3 text-center">Safe items</p>
+                        <div class="text-[12px] sm:text-[13px] leading-snug space-y-4" role="region" aria-label="Safe item time windows and conditions">
+                            <div class="text-center">
+                                <p class="font-semibold text-red-950">Sun 11:59 PM &ndash; Mon 11:59 PM</p>
+                                <p class="mt-1.5 text-gray-900">Touching a fork to your nose, or Adams boxers as your outermost layer.</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="font-semibold text-red-950">Mon 11:59 PM &ndash; Tues 19:31</p>
+                                <p class="mt-1.5 text-gray-900">None. Let chaos reign.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -187,6 +185,9 @@
                                         You may kill your teammates target.
 You only need one collective kill to survive elimination on Tuesday at 19:31. More kills may grant some benefit.
                                     </li>
+                                    <li><strong>Freshman Rule:</strong> 
+                                      Freshman must send a selfie of themselves in the Servery each day in order to stay alive.
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -196,6 +197,11 @@ You only need one collective kill to survive elimination on Tuesday at 19:31. Mo
             </div>
         </main>
     </div>
+
+    <!-- Hardcoded safe roster names (matched case-insensitively to sheet names in the player list) -->
+    <script type="application/json" id="safe-people-data">
+    ["Aileen Pineda","Daniel Kocot","Evan Tsingos","Yau Fu","Melissa Edwards","Adam Bartholomew","Gabi Poniz","Taylor Thorne","Zainab Adamji","Yaren Yurt","Hugh Hankenson","Akshay Kumar","Natalie Mendez","Natasha Pereira","Liam Clower"]
+    </script>
 
     <script>
         const ROSTER_SHEET_ID = '1Xe6-8iwSQwpJEVsZc5cko6B5jDKOTyNSHD6nr7tMOl4';
@@ -215,9 +221,23 @@ You only need one collective kill to survive elimination on Tuesday at 19:31. Mo
 
         /** Case-insensitive key for roster / kills matching only. */
         function nameKey(str) {
-            const s = rosterNameFromSheet(str);
-            return s ? s.toLowerCase() : '';
+            let s = rosterNameFromSheet(str);
+            if (!s) return '';
+            s = s.replace(/\u2019/g, "'").replace(/\u2018/g, "'").replace(/\u201c|\u201d/g, '"');
+            return s.toLowerCase();
         }
+
+        const SAFE_PEOPLE_KEYS = (() => {
+            const el = document.getElementById('safe-people-data');
+            if (!el) return new Set();
+            try {
+                const names = JSON.parse(el.textContent);
+                return new Set(names.map(n => nameKey(String(n))));
+            } catch (e) {
+                console.warn('safe-people-data: invalid JSON', e);
+                return new Set();
+            }
+        })();
 
         function parseCSV(text) {
             const rows = [];
@@ -273,6 +293,14 @@ You only need one collective kill to survive elimination on Tuesday at 19:31. Mo
             if (!fullName) return "";
             const parts = fullName.trim().split(/\s+/);
             return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : parts[0].toLowerCase();
+        }
+
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
         }
 
         async function fetchData() {
@@ -392,16 +420,28 @@ You only need one collective kill to survive elimination on Tuesday at 19:31. Mo
                 return;
             }
 
-            rosterEl.innerHTML = sorted.map(p => `
+            const leaderboardLegend = `
+                <div class="col-span-full px-1.5 py-1">
+                    <p class="safe-name text-[12px] font-semibold leading-snug">Headed to Round 2 as of Sun 9:28 PM</p>
+                </div>`;
+
+            const prefix = currentTab === 'dead' ? '' : leaderboardLegend;
+            rosterEl.innerHTML = prefix + sorted.map(p => {
+                const safe = SAFE_PEOPLE_KEYS.has(nameKey(p.name));
+                const nameClass = safe
+                    ? 'safe-name text-[12px] font-semibold truncate leading-tight min-w-0'
+                    : 'text-[12px] font-semibold text-gray-900 truncate leading-tight min-w-0';
+                return `
                 <div class="px-1.5 py-1 flex flex-col justify-center ${p.status === 'Dead' ? 'opacity-90' : ''}">
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center gap-1 min-w-0">
                         <span class="w-1.5 h-1.5 rounded-full shrink-0 ${p.status === 'Alive' ? 'bg-green-600' : 'bg-red-600'}"></span>
-                        <span class="text-[12px] font-semibold text-gray-900 truncate leading-tight" title="${p.name}">${p.name}</span>
+                        <span class="${nameClass}" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
                         ${p.kills > 0 ? `<span class="text-[10px] font-bold text-white bg-gray-900 px-1 py-0 shrink-0 leading-tight" style="font-family: 'Courier New', monospace;">${p.kills}</span>` : ''}
                     </div>
-                    ${p.status === 'Dead' ? `<div class="text-[8px] truncate ml-2.5"><span class="text-red-600 font-bold uppercase">Dead</span> <span class="text-gray-400">by ${p.killedBy}</span></div>` : ''}
+                    ${p.status === 'Dead' ? `<div class="text-[8px] truncate ml-2.5"><span class="text-red-600 font-bold uppercase">Dead</span> <span class="text-gray-400">by ${escapeHtml(p.killedBy)}</span></div>` : ''}
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
 
         function renderUI() {
