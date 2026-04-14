@@ -38,24 +38,143 @@
             overscroll-behavior-y: contain;
             touch-action: pan-y;
         }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .fall-char {
+            display: inline-block;
+            transform-origin: center bottom;
+            animation: letter-drop 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes letter-drop {
+            0% {
+                transform: translate3d(var(--dx, 0px), -130vh, 0) rotate(calc(var(--rot, 0) * 1deg)) scale(1.15);
+                opacity: 0;
+                filter: blur(4px);
+            }
+            55% {
+                opacity: 1;
+                filter: blur(0);
+            }
+            72% {
+                transform: translate3d(0, 12px, 0) rotate(0deg) scale(1);
+            }
+            88% {
+                transform: translate3d(0, -4px, 0) rotate(0deg) scale(1);
+            }
+            100% {
+                transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+        .fall-faceoff .fall-char {
+            animation-duration: 1.05s;
+            animation-timing-function: cubic-bezier(0.18, 1, 0.32, 1);
+        }
+
+        .main-reveal {
+            opacity: 0;
+            animation: main-reveal 0.7s ease 1.15s forwards;
+        }
+
+        @keyframes main-reveal {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fall-char {
+                animation: none !important;
+                transform: none !important;
+                filter: none !important;
+                opacity: 1 !important;
+            }
+            .main-reveal {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="min-h-screen pb-12 max-md:min-h-[100dvh] max-md:flex max-md:flex-col">
-        <header class="py-8 md:py-12 px-4 text-center shrink-0">
+    <div class="min-h-screen pb-12 max-md:min-h-[100dvh] max-md:flex max-md:flex-col overflow-x-hidden">
+        <header class="py-8 md:py-12 px-4 text-center shrink-0 overflow-hidden">
             <div class="max-w-7xl mx-auto">
-                <h1 class="space-y-1 md:space-y-2">
-                    <span class="block playfair text-3xl sm:text-4xl md:text-6xl tracking-tight font-bold">
-                        <span class="text-red-600">Adams</span><span class="text-amber-500">sassins</span>
+                <h1 class="space-y-1 md:space-y-2 relative">
+                    <span class="sr-only">Adamssassins FACEOFF</span>
+                    <span aria-hidden="true" class="block playfair text-3xl sm:text-4xl md:text-6xl tracking-tight font-bold leading-tight">
+                        <span id="fall-adams" class="text-red-600"></span><span id="fall-sassins" class="text-amber-500"></span>
                     </span>
-                    <span class="faceoff-title block text-[clamp(3.25rem,16vw,13rem)] font-normal text-red-600">
-                        FACEOFF
-                    </span>
+                    <span aria-hidden="true" class="faceoff-title fall-faceoff block text-[clamp(3.25rem,16vw,13rem)] font-normal text-red-600 leading-none mt-1 md:mt-2" id="fall-faceoff"></span>
                 </h1>
             </div>
         </header>
 
-        <main class="max-w-5xl mx-auto px-4 w-full max-md:flex-1 max-md:min-h-0 max-md:flex max-md:flex-col">
+        <script>
+            (function () {
+                function prefersReducedMotion() {
+                    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                }
+                const adams = document.getElementById('fall-adams');
+                const sassins = document.getElementById('fall-sassins');
+                const faceoff = document.getElementById('fall-faceoff');
+                if (!adams || !sassins || !faceoff) return;
+
+                if (prefersReducedMotion()) {
+                    adams.textContent = 'Adams';
+                    sassins.textContent = 'sassins';
+                    faceoff.textContent = 'FACEOFF';
+                    return;
+                }
+
+                let delay = 0;
+                const step = 0.048;
+                const gap = 0.045;
+
+                function appendLetters(container, word, faceoffLine) {
+                    const st = faceoffLine ? step * 1.08 : step;
+                    for (let i = 0; i < word.length; i++) {
+                        const ch = word[i];
+                        const s = document.createElement('span');
+                        s.className = 'fall-char';
+                        s.textContent = ch;
+                        s.style.animationDelay = delay + 's';
+                        s.style.setProperty('--rot', (Math.random() * 26 - 13).toFixed(1));
+                        s.style.setProperty('--dx', (Math.random() * 40 - 20).toFixed(1) + 'px');
+                        container.appendChild(s);
+                        delay += st;
+                    }
+                    delay += gap;
+                }
+
+                appendLetters(adams, 'Adams', false);
+                appendLetters(sassins, 'sassins', false);
+                delay += 0.07;
+                appendLetters(faceoff, 'FACEOFF', true);
+            })();
+        </script>
+
+        <main class="main-reveal max-w-5xl mx-auto px-4 w-full max-md:flex-1 max-md:min-h-0 max-md:flex max-md:flex-col">
             <div class="mb-6 max-w-3xl mx-auto border-2 border-red-900/70 bg-neutral-950/90 rounded-sm px-4 py-5 shadow-[0_0_0_1px_rgba(220,38,38,0.15),0_12px_40px_rgba(0,0,0,0.45)]" role="region" aria-label="Faceoff rules">
                 <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-red-500 mb-3 text-center">Rules</p>
                 <p class="text-sm md:text-[15px] leading-relaxed text-neutral-200 text-center">
