@@ -3,238 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adamssassins FACEOFF</title>
-    <link rel="canonical" href="https://adamssassins.com/">
+    <title>Adamssassins</title>
     <link rel="icon" type="image/png" href="acorn_favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Franklin:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Libre+Franklin:wght@400;500;600;700&display=swap');
 
         body {
             font-family: 'Libre Franklin', sans-serif;
-            background-color: #0c0c0c;
-            color: #e8e8e8;
+            background-color: #f7f7f5;
+            color: #121212;
             margin: 0;
             padding: 0;
         }
 
         .playfair { font-family: 'Playfair Display', Georgia, serif; }
 
-        .faceoff-title {
-            font-family: 'Bebas Neue', Impact, sans-serif;
-            letter-spacing: 0.02em;
-            line-height: 0.95;
-            text-shadow: 0 0 40px rgba(220, 38, 38, 0.35);
+        .title-block {
+            display: inline-block;
+            max-width: 100%;
+            padding: 0.75rem 1.5rem 1rem;
+            box-sizing: border-box;
+        }
+
+        .tab-bar {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.125rem;
+            padding: 0.25rem 0;
+        }
+
+        .tab-btn {
+            transition: all 0.15s ease;
+            position: relative;
+            color: #666;
+        }
+
+        .tab-btn:hover {
+            color: #121212;
+        }
+
+        .tab-btn.active {
+            color: #121212;
+            font-weight: 700;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #121212;
+        }
+
+        .tab-btn.tab-adams {
+            color: rgb(153, 27, 27);
+        }
+
+        .tab-btn.tab-adams:hover {
+            color: rgb(127, 29, 29);
+        }
+
+        .tab-btn.tab-adams.active {
+            color: rgb(127, 29, 29);
+        }
+
+        .tab-btn.tab-adams.active::after {
+            background: rgb(153, 27, 27);
         }
 
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0c0c0c; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        ::-webkit-scrollbar-track { background: #f7f7f5; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #999; }
 
+        /* Keep pan gestures on list/feed scrollers; reduce scroll chaining to the page (esp. mobile). */
         .scroll-pane {
             -webkit-overflow-scrolling: touch;
             overscroll-behavior-y: contain;
             touch-action: pan-y;
         }
 
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-
-        .fall-char {
-            display: inline-block;
-            transform-origin: center bottom;
-            animation: letter-drop 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-
-        @keyframes letter-drop {
-            0% {
-                transform: translate3d(var(--dx, 0px), -130vh, 0) rotate(calc(var(--rot, 0) * 1deg)) scale(1.15);
-                opacity: 0;
-                filter: blur(4px);
-            }
-            55% {
-                opacity: 1;
-                filter: blur(0);
-            }
-            72% {
-                transform: translate3d(0, 12px, 0) rotate(0deg) scale(1);
-            }
-            88% {
-                transform: translate3d(0, -4px, 0) rotate(0deg) scale(1);
-            }
-            100% {
-                transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-                opacity: 1;
-                filter: blur(0);
-            }
-        }
-
-        .fall-faceoff .fall-char {
-            animation-duration: 1.05s;
-            animation-timing-function: cubic-bezier(0.18, 1, 0.32, 1);
-        }
-
-        .main-reveal {
-            opacity: 0;
-            animation: main-reveal 0.7s ease 1.15s forwards;
-        }
-
-        @keyframes main-reveal {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .fall-char {
-                animation: none !important;
-                transform: none !important;
-                filter: none !important;
-                opacity: 1 !important;
-            }
-            .main-reveal {
-                animation: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="min-h-screen pb-12 max-md:min-h-[100dvh] max-md:flex max-md:flex-col overflow-x-hidden">
-        <header class="py-8 md:py-12 px-4 text-center shrink-0 overflow-hidden">
+    <div class="min-h-screen pb-8 max-md:min-h-[100dvh] max-md:flex max-md:flex-col">
+        <header class="py-4 px-4 text-center shrink-0">
             <div class="max-w-7xl mx-auto">
-                <h1 class="space-y-1 md:space-y-2 relative">
-                    <span class="sr-only">Adamssassins FACEOFF</span>
-                    <span aria-hidden="true" class="block playfair text-3xl sm:text-4xl md:text-6xl tracking-tight font-bold leading-tight">
-                        <span id="fall-adams" class="text-red-600"></span><span id="fall-sassins" class="text-amber-500"></span>
-                    </span>
-                    <span aria-hidden="true" class="faceoff-title fall-faceoff block text-[clamp(3.25rem,16vw,13rem)] font-normal text-red-600 leading-none mt-1 md:mt-2" id="fall-faceoff"></span>
-                </h1>
+                <div class="title-block mx-auto pb-3 mb-2">
+                    <h1 class="playfair text-4xl md:text-6xl tracking-tight">
+                         <span class="text-red-800">Adams</span><span class="text-amber-500">sassins</span>
+                    </h1>
+                </div>
+                <p class="text-[11px] text-center mb-4">
+                    <a href="/" class="text-red-800 hover:text-red-950 font-semibold uppercase tracking-widest underline underline-offset-2 transition-colors">Adamssassins home (FACEOFF)</a>
+                </p>
+                <div class="flex items-center justify-center gap-4 text-[11px] text-gray-500 uppercase tracking-widest mb-5">
+                    <span>April 11, 2026 &ndash; May 2, 2026</span>
+                    <span class="text-gray-300">|</span>
+                    <a href="https://groupme.com/join_group/114258842/5GouQktF" target="_blank" class="hover:text-gray-900 transition-colors underline underline-offset-2">
+                        Join the GroupMe
+                    </a>
+                </div>
+                <div class="w-full max-w-[17rem] sm:max-w-xs mx-auto px-3">
+                    <div class="border border-red-200/90 bg-red-50/90 rounded-sm px-3 py-3 shadow-sm">
+                        <p class="text-[10px] font-semibold uppercase tracking-widest text-red-900 mb-3 text-center">Safe items</p>
+                        <div class="text-[12px] sm:text-[13px] leading-snug space-y-4" role="region" aria-label="Safe item time windows and conditions">
+                            <div class="text-center">
+                                <p class="font-semibold text-red-950">Until further notice </p>
+                                <p class="mt-1.5 text-gray-900">Goggles + Adams Boxers as outermost layer.</p>
+                            </div>
+            
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
-        <script>
-            (function () {
-                function prefersReducedMotion() {
-                    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                }
-                const adams = document.getElementById('fall-adams');
-                const sassins = document.getElementById('fall-sassins');
-                const faceoff = document.getElementById('fall-faceoff');
-                if (!adams || !sassins || !faceoff) return;
+        <main class="max-w-7xl mx-auto px-4 mt-4 w-full max-md:flex-1 max-md:min-h-0 max-md:flex max-md:flex-col">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start max-md:flex-1 max-md:min-h-0 max-md:grid-rows-[auto_minmax(0,1fr)] max-md:items-stretch w-full">
 
-                if (prefersReducedMotion()) {
-                    adams.textContent = 'Adams';
-                    sassins.textContent = 'sassins';
-                    faceoff.textContent = 'FACEOFF';
-                    return;
-                }
+                <!-- Left Column: Kill Feed -->
+                <section class="md:col-span-4 max-md:min-h-0">
+                    <div id="kill-feed" class="scroll-pane divide-y divide-gray-200/80 max-h-[min(280px,42vh)] md:max-h-[700px] overflow-y-auto">
+                        <div id="loading-spinner" class="p-8 text-center text-gray-400 italic text-sm">
+                            loading...
+                        </div>
+                    </div>
+                </section>
 
-                let delay = 0;
-                const step = 0.048;
-                const gap = 0.045;
+                <!-- Right Column: Player Management -->
+                <section class="md:col-span-8 flex flex-col gap-4 max-md:min-h-0 max-md:flex-1">
+                    <div class="max-md:flex max-md:flex-col max-md:min-h-0 max-md:flex-1">
+                        <div class="px-0 py-2 shrink-0">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-2">
+                                <div class="tab-bar gap-0.5">
+                                    <button onclick="setTab('alive')" id="tab-alive" class="tab-btn tab-adams active px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
+                                        Alive <span id="count-alive" class="text-red-800/55 ml-0.5">(--)</span>
+                                    </button>
+                                    <button onclick="setTab('dead')" id="tab-dead" class="tab-btn tab-adams px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
+                                        Dead <span id="count-dead" class="text-red-800/55 ml-0.5">(--)</span>
+                                    </button>
+                                    <button onclick="setTab('all')" id="tab-all" class="tab-btn tab-adams px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
+                                        All <span id="count-all" class="text-red-800/55 ml-0.5">(--)</span>
+                                    </button>
+                                    <button onclick="setTab('rules')" id="tab-rules" class="tab-btn tab-adams px-3 py-1.5 text-xs uppercase tracking-widest font-semibold">
+                                        Rules
+                                    </button>
+                                </div>
 
-                function appendLetters(container, word, faceoffLine) {
-                    const st = faceoffLine ? step * 1.08 : step;
-                    for (let i = 0; i < word.length; i++) {
-                        const ch = word[i];
-                        const s = document.createElement('span');
-                        s.className = 'fall-char';
-                        s.textContent = ch;
-                        s.style.animationDelay = delay + 's';
-                        s.style.setProperty('--rot', (Math.random() * 26 - 13).toFixed(1));
-                        s.style.setProperty('--dx', (Math.random() * 40 - 20).toFixed(1) + 'px');
-                        container.appendChild(s);
-                        delay += st;
-                    }
-                    delay += gap;
-                }
+                                <div class="relative w-full md:w-48 mb-1">
+                                    <input type="text" id="player-search" placeholder="Search..." class="w-full bg-transparent border-0 border-b border-gray-300 rounded-none py-1.5 px-7 focus:outline-none focus:ring-0 focus:border-gray-500 transition-colors text-xs text-gray-800">
+                                    <i class="fa fa-search absolute left-2.5 top-2 text-gray-300 text-[10px]"></i>
+                                </div>
+                            </div>
+                        </div>
 
-                appendLetters(adams, 'Adams', false);
-                appendLetters(sassins, 'sassins', false);
-                delay += 0.07;
-                appendLetters(faceoff, 'FACEOFF', true);
-            })();
-        </script>
+                        <div id="player-list" class="scroll-pane p-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 max-md:flex-1 max-md:min-h-0 max-md:max-h-none max-h-[550px] overflow-y-auto">
+                        </div>
+                        <div id="rules-panel" class="scroll-pane py-2 max-md:flex-1 max-md:min-h-0 max-md:max-h-none max-h-[550px] overflow-y-auto" style="display:none">
+                            <div class="text-[13px] leading-relaxed text-gray-800">
+                                <ul class="space-y-3">
+                                    <li>You have been assigned a target.</li>
+                                    <li>You must kill them by blasting them with a water gun. Several hundred waterguns are available in the dining hall.</li>
+                                    <li>When you eliminate your target, you <strong>inherit their target</strong> as your new assignment.</li>
+                                    <li>If your team does not have any kills by 19:31 on Tuesday 4/14, you will be <strong>eliminated</strong>.</li>
+                                    <li>The game continues until only <strong>one nut remains</strong>.</li>
+                                    <li><strong>Safe zones:</strong> Adams Library is safe. The site of an active lecture, lab, seminar or section is safe. A scheduled lecture which has not begun is not safe. A lecture which extends past its official end time is safe. Office Hours are not safe. Disrupting the function of the university is unadvisable and morally problematic.</li>
+                                    <li><strong>Dining Hall safety:</strong> All house serveries are safe. If you are sitting down in the Adams dhall you are safe. This does not include russel dining room, greenhouse etc.. Sitting is defined quite broadly: kneeling, sitting on a table, whatever. Standing / walking in the dining hall is unsafe.</li>
+                                    <li><strong>To report a kill</strong>, text (# in the groupme) or email Zoe with a picture of you and your target together to get your next name. After a kill, you may ask your target for their target's name to avoid latency.</li>
+                                    <li><strong>Safe Items:</strong> Sunday 11:59 PM &ndash; Monday 11:59 PM: immunity if you are <strong>touching a fork to your nose</strong> or <strong>wearing Adams boxers as your outermost layer</strong>. Monday 11:59 PM &ndash; Tuesday 7:31 PM (19:31): <strong>no safe items</strong>.</li>
+                                    <li><strong>Team rules:</strong> 
+                                        You may kill your teammates target.
+You only need one collective kill to survive elimination on Tuesday at 19:31. More kills may grant some benefit.
+                                    </li>
+                                    <li><strong>Freshman Rule:</strong> 
+                                      Freshman must send a selfie of themselves in the Servery each day in order to stay alive.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-        <main class="main-reveal max-w-5xl mx-auto px-4 w-full max-md:flex-1 max-md:min-h-0 max-md:flex max-md:flex-col">
-            <div class="mb-6 max-w-3xl mx-auto border-2 border-red-900/70 bg-neutral-950/90 rounded-sm px-4 py-5 shadow-[0_0_0_1px_rgba(220,38,38,0.15),0_12px_40px_rgba(0,0,0,0.45)]" role="region" aria-label="Faceoff rules">
-                <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-red-500 mb-3 text-center">Rules</p>
-                <p class="text-sm md:text-[15px] leading-relaxed text-neutral-200 text-center">
-                    Safe players are safe until midnight. From 7:32 - 11:59, the Round 1 faceoff will take place. Those facing elimination will shoot as many of the other faceoff players as possible. Top 8 go through. No penalty for being shot (you don&rsquo;t die). All kill pics go to the big GroupMe.
-                </p>
-            </div>
-
-            <div class="mb-4 max-w-md mx-auto">
-                <div class="relative w-full">
-                    <input type="text" id="player-search" placeholder="Search..." class="w-full bg-transparent border-0 border-b border-neutral-600 rounded-none py-2 px-8 focus:outline-none focus:ring-0 focus:border-neutral-400 transition-colors text-sm text-neutral-200 placeholder:text-neutral-600">
-                    <i class="fa fa-search absolute left-2 top-2.5 text-neutral-600 text-[10px]"></i>
-                </div>
-            </div>
-
-            <div id="player-list" class="scroll-pane p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-md:flex-1 max-md:min-h-0 max-h-[min(70vh,720px)] overflow-y-auto">
-                <div id="loading-spinner" class="col-span-full p-12 text-center text-neutral-500 italic text-sm">
-                    loading...
-                </div>
             </div>
         </main>
     </div>
-
-    <!-- Used only to exclude these names from the FACEOFF list (case-insensitive match to sheet names) -->
-    <script type="application/json" id="safe-people-data">
-    ["Aileen Pineda","Daniel Kocot","Evan Tsingos","Yau Fu","Melissa Edwards","Adam Bartholomew","Gabi Poniz","Taylor Thorne","Yaren Yurt","Hugh Hankenson","Akshay Kumar","Natalie Mendez","Natasha Pereira","Liam Clower", "Nidhaavi Ramjheetun", "Josue Ramirez", "Chris Ruiz", "Sophia Russo", "Will Smialek", "Enaya Ahmad", "Adolfo Balderas", "Hannah Burrows", "Madeline Phuong",
-    "Mateo Quintero", "Lindsey Brail"
-    ,"Malachi Miller"]
-    </script>
 
     <script>
         const ROSTER_SHEET_ID = '1Xe6-8iwSQwpJEVsZc5cko6B5jDKOTyNSHD6nr7tMOl4';
         const KILLS_SHEET_ID = '1eLd4v4svDrogs6e_SiJ76EjalDCTfSmYiQnEbZoXMdI';
 
-        let faceoffPlayers = [];
+        let currentPlayers = [];
+        let currentKillFeed = [];
+        let currentTab = 'alive';
 
         const getCsvUrl = (id) => `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=0`;
 
+        /** Trim and collapse spaces; preserve capitalization from the sheet. */
         function rosterNameFromSheet(str) {
             if (!str) return '';
             return String(str).trim().replace(/\s+/g, ' ');
         }
 
+        /** Case-insensitive key for roster / kills matching only. */
         function nameKey(str) {
             let s = rosterNameFromSheet(str);
             if (!s) return '';
             s = s.replace(/\u2019/g, "'").replace(/\u2018/g, "'").replace(/\u201c|\u201d/g, '"');
             return s.toLowerCase();
         }
-
-        const SAFE_PEOPLE_KEYS = (() => {
-            const el = document.getElementById('safe-people-data');
-            if (!el) return new Set();
-            try {
-                const names = JSON.parse(el.textContent);
-                return new Set(names.map(n => nameKey(String(n))));
-            } catch (e) {
-                console.warn('safe-people-data: invalid JSON', e);
-                return new Set();
-            }
-        })();
 
         function parseCSV(text) {
             const rows = [];
@@ -273,17 +255,42 @@
             throw new Error(`Failed to fetch`);
         }
 
+        /**
+         * Match sheet headers to column keys. Substring match is unsafe for short keys
+         * (e.g. "name" matches inside "buildingandfloorofresidence"); we only allow
+         * includes() when the search key is long enough to avoid false positives.
+         */
         function findHeaderIndices(headerRow, targets) {
             const indices = {};
             if (!headerRow) return indices;
+            const cleanCell = (h) => String(h || '').toLowerCase().replace(/[^a-z0-9]/g, '').trim();
             headerRow.forEach((h, i) => {
-                const clean = h.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+                const clean = cleanCell(h);
                 targets.forEach(t => {
                     const cleanTarget = t.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
-                    if (clean === cleanTarget || clean.includes(cleanTarget)) indices[t] = i;
+                    if (clean === cleanTarget) indices[t] = i;
+                });
+            });
+            headerRow.forEach((h, i) => {
+                const clean = cleanCell(h);
+                targets.forEach(t => {
+                    if (indices[t] !== undefined) return;
+                    const cleanTarget = t.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+                    if (cleanTarget.length >= 6 && clean.includes(cleanTarget)) indices[t] = i;
                 });
             });
             return indices;
+        }
+
+        function stripBom(text) {
+            return String(text).replace(/^\ufeff/, '');
+        }
+
+        function assertCsvNotHtml(text, label) {
+            const t = stripBom(text).trimStart();
+            if (t.startsWith('<!') || t.startsWith('<html') || t.startsWith('<HTML')) {
+                throw new Error(label + ': got HTML instead of CSV. Set sharing to "Anyone with the link can view".');
+            }
         }
 
         function getLastName(fullName) {
@@ -301,7 +308,6 @@
         }
 
         async function fetchData() {
-            const listEl = document.getElementById('player-list');
             try {
                 const [rosterRes, killsRes] = await Promise.all([
                     fetchWithRetry(getCsvUrl(ROSTER_SHEET_ID)),
@@ -311,27 +317,34 @@
                 const rosterText = await rosterRes.text();
                 const killsText = await killsRes.text();
 
-                const rosterRows = parseCSV(rosterText);
-                const killsRows = parseCSV(killsText);
+                assertCsvNotHtml(rosterText, 'Roster');
+                assertCsvNotHtml(killsText, 'Kills');
+
+                const rosterRows = parseCSV(stripBom(rosterText));
+                const killsRows = parseCSV(stripBom(killsText));
 
                 processData(rosterRows, killsRows);
             } catch (error) {
                 console.error('Data error:', error);
-                listEl.innerHTML = `<div class="col-span-full p-8 text-center text-red-500 text-sm">Sync Failure. Check Permissions.</div>`;
+                const msg = escapeHtml(error.message || 'Sync failed');
+                const errHtml = `<div class="p-8 text-center text-red-700 text-sm">Sync failure. ${msg}</div>`;
+                document.getElementById('kill-feed').innerHTML = errHtml;
+                document.getElementById('player-list').innerHTML = errHtml;
             }
         }
 
         function processData(rosterData, killsData) {
             const playerMap = new Map();
+            const killFeed = [];
 
-            const rosterHeaders = findHeaderIndices(rosterData[0], ['name']);
-            const nameIdx = rosterHeaders['name'] ?? 0;
+            const rosterHeaders = findHeaderIndices(rosterData[0], ['name', 'fullname', 'player', 'displayname']);
+            const nameIdx = rosterHeaders['name'] ?? rosterHeaders['fullname'] ?? rosterHeaders['player'] ?? rosterHeaders['displayname'] ?? 0;
 
             rosterData.slice(1).forEach(row => {
                 const rawName = rosterNameFromSheet(row[nameIdx] ?? '');
                 if (rawName.length > 1) {
                     const key = nameKey(rawName);
-                    playerMap.set(key, { name: rawName, status: 'Alive' });
+                    playerMap.set(key, { name: rawName, status: 'Alive', killedBy: null, location: 'Field', kills: 0 });
                 }
             });
 
@@ -339,6 +352,9 @@
                 const killsHeaders = findHeaderIndices(killsData[0], ['killer', 'target', 'timestamp', 'location', 'description']);
                 const kIdx = killsHeaders['killer'] ?? 1;
                 const tIdx = killsHeaders['target'] ?? 2;
+                const timeIdx = killsHeaders['timestamp'];
+                const locIdx = killsHeaders['location'];
+                const descIdx = killsHeaders['description'];
 
                 killsData.slice(1).forEach(row => {
                     const killerRaw = rosterNameFromSheet(row[kIdx] ?? '');
@@ -352,41 +368,109 @@
                     if (victimObj.status !== 'Alive') return;
 
                     victimObj.status = 'Dead';
+                    victimObj.location = locIdx !== undefined ? row[locIdx]?.trim() : 'Field';
+
+                    const killerRoster = killerKey && playerMap.has(killerKey) ? playerMap.get(killerKey).name : '';
+                    victimObj.killedBy = killerRoster || killerRaw || 'Unknown';
+
+                    if (killerKey && playerMap.has(killerKey)) {
+                        playerMap.get(killerKey).kills += 1;
+                    }
+
+                    const killerDisplay = killerRoster || killerRaw || 'Unknown';
+
+                    killFeed.unshift({
+                        time: timeIdx !== undefined ? row[timeIdx] : '',
+                        killer: killerDisplay,
+                        victim: victimObj.name,
+                        location: victimObj.location,
+                        desc: descIdx !== undefined ? row[descIdx]?.trim() : ''
+                    });
                 });
             }
 
-            faceoffPlayers = Array.from(playerMap.values()).filter(p =>
-                p.status === 'Alive' && !SAFE_PEOPLE_KEYS.has(nameKey(p.name))
-            );
+            currentPlayers = Array.from(playerMap.values());
+            currentKillFeed = killFeed;
+            renderUI();
+        }
 
-            renderRoster(document.getElementById('player-search').value);
+        function setTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+
+            const playerList = document.getElementById('player-list');
+            const rulesPanel = document.getElementById('rules-panel');
+            const searchBox = document.getElementById('player-search').parentElement;
+
+            if (tab === 'rules') {
+                playerList.style.display = 'none';
+                searchBox.style.display = 'none';
+                rulesPanel.style.display = 'block';
+            } else {
+                playerList.style.display = '';
+                searchBox.style.display = '';
+                rulesPanel.style.display = 'none';
+                renderRoster(document.getElementById('player-search').value);
+            }
         }
 
         function renderRoster(filter = '') {
             const rosterEl = document.getElementById('player-list');
-            const q = filter.toLowerCase().trim();
 
-            let filtered = faceoffPlayers.filter(p =>
-                !q || p.name.toLowerCase().includes(q)
-            );
+            let filtered = currentPlayers.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
 
-            const sorted = filtered.sort((a, b) =>
-                getLastName(a.name).localeCompare(getLastName(b.name))
-            );
+            if (currentTab === 'alive') filtered = filtered.filter(p => p.status === 'Alive');
+            if (currentTab === 'dead') filtered = filtered.filter(p => p.status === 'Dead');
+
+            const sorted = filtered.sort((a, b) => b.kills - a.kills || getLastName(a.name).localeCompare(getLastName(b.name)));
 
             if (sorted.length === 0) {
-                rosterEl.innerHTML = `<div class="col-span-full p-8 text-center text-neutral-500 italic text-sm">No players found.</div>`;
+                rosterEl.innerHTML = `<div class="col-span-full p-8 text-center text-gray-400 italic text-sm">No players found.</div>`;
                 return;
             }
-
+            const nameClass = 'text-[12px] font-semibold text-gray-900 truncate leading-tight min-w-0';
             rosterEl.innerHTML = sorted.map(p => {
-                const display = escapeHtml(p.name.toUpperCase());
                 return `
-                <div class="px-2 py-2 flex items-center justify-center text-center border border-neutral-800/80 rounded-sm bg-neutral-900/40">
-                    <span class="text-sm font-semibold text-neutral-100 tracking-wide leading-snug" title="${escapeHtml(p.name)}">${display}</span>
+                <div class="px-1.5 py-1 flex flex-col justify-center ${p.status === 'Dead' ? 'opacity-90' : ''}">
+                    <div class="flex items-center gap-1 min-w-0">
+                        <span class="w-1.5 h-1.5 rounded-full shrink-0 ${p.status === 'Alive' ? 'bg-green-600' : 'bg-red-600'}"></span>
+                        <span class="${nameClass}" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
+                        ${p.kills > 0 ? `<span class="text-[10px] font-bold text-white bg-gray-900 px-1 py-0 shrink-0 leading-tight" style="font-family: 'Courier New', monospace;">${p.kills}</span>` : ''}
+                    </div>
+                    ${p.status === 'Dead' ? `<div class="text-[8px] truncate ml-2.5"><span class="text-red-600 font-bold uppercase">Dead</span> <span class="text-gray-400">by ${escapeHtml(p.killedBy)}</span></div>` : ''}
                 </div>
             `;
             }).join('');
+        }
+
+        function renderUI() {
+            const feedEl = document.getElementById('kill-feed');
+
+            document.getElementById('count-all').innerText = `(${currentPlayers.length})`;
+            document.getElementById('count-alive').innerText = `(${currentPlayers.filter(p => p.status === 'Alive').length})`;
+            document.getElementById('count-dead').innerText = `(${currentPlayers.filter(p => p.status === 'Dead').length})`;
+
+            if (currentKillFeed.length === 0) {
+                feedEl.innerHTML = `<div class="p-8 text-center text-gray-400 italic playfair">No confirmed kills.</div>`;
+            } else {
+                feedEl.innerHTML = currentKillFeed.map(k => `
+                    <div class="px-0 py-3">
+                        <p class="text-[13px] leading-snug">
+                            <span class="font-bold">${k.killer}</span>
+                            <span class="text-gray-500">took out</span>
+                            <span class="font-bold">${k.victim}</span>
+                        </p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-[10px] text-gray-400 uppercase tracking-wider">${k.location}</span>
+                            <span class="text-[10px] text-gray-300">${k.time ? k.time.split(' ')[0] : ''}</span>
+                        </div>
+                        ${k.desc ? `<p class="playfair italic text-[12px] text-gray-500 mt-1.5 leading-snug border-l-2 border-gray-200 pl-2">${k.desc}</p>` : ''}
+                    </div>
+                `).join('');
+            }
+
+            renderRoster(document.getElementById('player-search').value);
         }
 
         window.onload = fetchData;
